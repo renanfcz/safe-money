@@ -17,6 +17,7 @@ export class ExpenseService {
         user: { connect: { id: expenseCreate.userId } },
         month: expenseCreate.month,
         year: expenseCreate.year,
+        status: expenseCreate.status
       },
     });
     return expense;

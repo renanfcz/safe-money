@@ -74,9 +74,10 @@ input ExpenseCreateInput {
   description: String
   value: Float
   categoryId: String!
-  userId: String!
+  userId: String
   month: String!
   year: Float!
+  status: String!
 }
 
 input ExpenseUpdateInput {

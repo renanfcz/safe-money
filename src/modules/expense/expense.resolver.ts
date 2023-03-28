@@ -1,5 +1,6 @@
-import { UseGuards } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { JwtService } from '@nestjs/jwt';
 
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import { ExpenseCreateInput } from './dto/create-expense-input';
@@ -10,11 +11,21 @@ import { ExpenseService } from './expense.service';
 
 @Resolver(() => Expense)
 export class ExpenseResolver {
-  constructor(private readonly expenseService: ExpenseService) {}
+  constructor(
+    private readonly expenseService: ExpenseService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Mutation(() => Expense)
   @UseGuards(JwtAuthGuard)
-  async createExpense(@Args('data') data: ExpenseCreateInput) {
+  async createExpense(
+    @Args('data') data: ExpenseCreateInput,
+    @Context() context,
+  ) {
+    const authHeader = context.req.headers.authorization;
+    const token = authHeader.split(' ')[1];
+    const decoded = this.jwtService.decode(token);
+    data.userId = typeof decoded === 'object' && 'id' in decoded ? decoded.id : null;
     return await this.expenseService.create(data);
   }
 

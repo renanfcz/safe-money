@@ -1,4 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
+import { ExpenseStatus } from '../enums/ExpenseStatus';
 
 @InputType()
 export class ExpenseCreateInput {
@@ -10,10 +11,12 @@ export class ExpenseCreateInput {
   value: number;
   @Field()
   categoryId: string;
-  @Field()
-  userId: string;
+  @Field({nullable: true})
+  userId?: string;
   @Field()
   month: string;
   @Field()
   year: number;
+  @Field()
+  status: ExpenseStatus;
 }
