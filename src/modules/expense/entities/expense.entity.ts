@@ -1,13 +1,14 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-
+import { ExpenseGroup } from './expense.group.entity';
 import { Category } from './../../category/entities/category.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { ExpenseStatus } from '@prisma/client';
 
 @ObjectType()
 export class Expense {
   @Field()
   id: string;
   @Field({ nullable: true })
-  title?: string;
+  title: string;
   @Field({ nullable: true })
   description?: string;
   @Field({ nullable: true })
@@ -15,11 +16,9 @@ export class Expense {
   @Field({ nullable: true })
   value: number;
   @Field()
-  status: string;
+  status: ExpenseStatus;
   @Field(() => Category)
   category: Category;
   @Field()
-  month: string;
-  @Field()
-  year: number;
+  expenseGroupId: string;
 }

@@ -48,13 +48,6 @@ export class UserService {
   async findOneByEmail(email: string): Promise<User | null> {
     return await this.prisma.user.findUnique({
       where: { email },
-      include: {
-        expenses: {
-          include: {
-            category: true,
-          }
-        }
-      }
     });
   }
 

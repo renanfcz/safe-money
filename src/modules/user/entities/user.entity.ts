@@ -1,5 +1,6 @@
-import { Expense } from './../../expense/entities/expense.entity';
-import { ObjectType, Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+
+import { ExpenseGroup } from './../../expense/entities/expense.group.entity';
 
 @ObjectType()
 export class User {
@@ -21,6 +22,6 @@ export class User {
   @Field()
   salary: number;
 
-  @Field(() => [Expense], { nullable: true })
-  expenses?: Expense[];
+  @Field(() => [ExpenseGroup], {nullable: true})
+  expenseGroup?: ExpenseGroup[];
 }

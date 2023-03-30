@@ -14,7 +14,7 @@ export class CategoryService {
       },
     });
 
-    if (!existsCategory) {
+    if (existsCategory) {
       throw new HttpException(
         'A categoria com o título ' +
           data.title +

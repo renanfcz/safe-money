@@ -20,27 +20,35 @@ model Category {
 
 model Expense {
   id          String        @id @default(cuid()) @map("_id")
-  title       String?
+  title       String
   description String?
   createdAt   DateTime      @default(now())
   value       Float         @default(0)
   status      ExpenseStatus @default(OPEN)
   categoryId  String        @unique
   category    Category      @relation(fields: [categoryId], references: [id])
-  userId      String        @unique
-  user        User          @relation(fields: [userId], references: [id])
-  month       String
-  year        Int
+
+  expenseGroupId String
+  expenseGroup   ExpenseGroup @relation(fields: [expenseGroupId], references: [id])
+}
+
+model ExpenseGroup {
+  id       String    @id @default(cuid()) @map("_id")
+  month    String
+  year     Int
+  userId   String    @unique
+  user     User      @relation(fields: [userId], references: [id])
+  expenses Expense[]
 }
 
 model User {
-  id        String    @id @default(cuid()) @map("_id")
-  name      String
-  email     String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  salary    Float     @default(0)
-  expenses  Expense[]
+  id           String         @id @default(cuid()) @map("_id")
+  name         String
+  email        String         @unique
+  password     String
+  createdAt    DateTime       @default(now())
+  salary       Float          @default(0)
+  expenseGroup ExpenseGroup[]
 }
 
 enum ExpenseStatus {

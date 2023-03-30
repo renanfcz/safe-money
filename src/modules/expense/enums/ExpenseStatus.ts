@@ -1,4 +1,4 @@
-export enum ExpenseStatus {
-    OPEN = 'OPEN',
-    PAID = 'PAID',
+export type ExpenseStatus = {
+    OPEN: 'OPEN',
+    PAID: 'PAID',
   }

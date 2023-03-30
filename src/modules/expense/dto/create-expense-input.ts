@@ -1,22 +1,24 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { ExpenseStatus } from '../enums/ExpenseStatus';
+import { ExpenseStatus } from '@prisma/client';
 
 @InputType()
 export class ExpenseCreateInput {
-  @Field({nullable: true})
-  title?: string;
-  @Field({nullable: true})
+  @Field()
+  title: string;
+  @Field({ nullable: true })
   description?: string;
-  @Field({nullable: true})
+  @Field({ nullable: true })
   value: number;
   @Field()
   categoryId: string;
-  @Field({nullable: true})
+  @Field({ nullable: true })
+  expenseGroupId?: string;
+  @Field({ nullable: true })
+  status?: ExpenseStatus;
+  @Field({ nullable: true })
+  month?: string;
+  @Field({ nullable: true })
+  year?: number;
+  @Field({ nullable: true })
   userId?: string;
-  @Field()
-  month: string;
-  @Field()
-  year: number;
-  @Field()
-  status: ExpenseStatus;
 }

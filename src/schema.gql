@@ -33,8 +33,7 @@ type Expense {
   value: Float
   status: String!
   category: Category!
-  month: String!
-  year: Float!
+  expenseGroupId: String!
 }
 
 type User {
@@ -44,12 +43,20 @@ type User {
   password: String!
   createdAt: DateTime!
   salary: Float!
+  expenseGroup: [ExpenseGroup!]
+}
+
+type ExpenseGroup {
+  id: String!
+  month: String!
+  year: Float!
+  user: User!
   expenses: [Expense!]
 }
 
 type Query {
-  findAllExpenses: [Expense!]!
-  getSumaryDashboard: DashboardSumary!
+  findAllExpensesGrouping: [ExpenseGroup!]!
+  getSumaryDashboard(month: String!, year: Float!): DashboardSumary!
   findAllUsers: [User!]!
   findOneUser(id: String!): User!
   findAllCategories: [Category!]!
@@ -58,7 +65,6 @@ type Query {
 
 type Mutation {
   createExpense(data: ExpenseCreateInput!): Expense!
-  updateExpense(id: String!, updateExpensesInput: ExpenseUpdateInput!): Expense!
   removeExpense(id: String!): Expense!
   createUser(createUserInput: UserCreateInput!): User!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
@@ -70,21 +76,15 @@ type Mutation {
 }
 
 input ExpenseCreateInput {
-  title: String
+  title: String!
   description: String
   value: Float
   categoryId: String!
+  expenseGroupId: String
+  status: String
+  month: String
+  year: Float
   userId: String
-  month: String!
-  year: Float!
-  status: String!
-}
-
-input ExpenseUpdateInput {
-  title: String
-  description: String
-  value: Float
-  categoryId: String
 }
 
 input UserCreateInput {
