@@ -22,11 +22,7 @@ export class ExpenseResolver {
     @Args('data') data: ExpenseCreateInput,
     @Context() context,
   ) {
-    const authHeader = context.req.headers.authorization;
-    const token = authHeader.split(' ')[1];
-    const decoded = this.jwtService.decode(token);
-    data.userId =
-      typeof decoded === 'object' && 'id' in decoded ? decoded.id : null;
+    data.userId = context.req.user.id
     return await this.expenseService.create(data);
   }
 
@@ -43,7 +39,7 @@ export class ExpenseResolver {
     @Args('month') month: string,
     @Args('year') year: number,
   ) {
-    return await this.expenseService.getSumary(context.req.id, month, year);
+    return await this.expenseService.getSumary(context.req.user.id, month, year);
   }
 
   // @Mutation(() => Expense)

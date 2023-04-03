@@ -28,7 +28,7 @@ export class ExpenseService {
             month: expenseCreateInput.month,
             year: expenseCreateInput.year,
             user: { connect: { id: expenseCreateInput.userId } },
-          },
+          }
         });
         idGroup = group.id;
       } else {
@@ -77,6 +77,24 @@ export class ExpenseService {
     });
   }
 
+  async findGroupsByMonthAndYear(id: string, month: string, year: number) : Promise<ExpenseGroup> {
+    return await this.prisma.expenseGroup.findFirst({
+      where: {
+        user: { id },
+        month,
+        year
+      },
+      include: {
+        user: true,
+        expenses: {
+          include: {
+            category: true,
+          },
+        },
+      },
+    });
+  }
+
   async update(id: string, updateExpenseGroupInput: ExpenseGroupUpdateInput) {
     try {
       return true;
@@ -96,22 +114,20 @@ export class ExpenseService {
   }
 
   async getSumary(id: string, month: string, year: number) {
-    const expensesGroups = await this.findAllGrouping(id);
+    const expenseGroup = await this.findGroupsByMonthAndYear(id, month, year);
     const user = await this.prisma.user.findFirst({ where: { id } });
 
-    const filteredExpenses = expensesGroups.find((e) => {
-      e.month == month && e.year == year;
-    }).expenses;
+    const expenses = expenseGroup.expenses;
 
-    const amountPaid = filteredExpenses.reduce((total, expense) => {
+    const amountPaid = expenses.reduce((total, expense) => {
       if (expense.status == 'PAID') return total + expense.value;
       else return 0;
     }, 0);
-    const amountToPay = filteredExpenses.reduce((total, expense) => {
+    const amountToPay = expenses.reduce((total, expense) => {
       if (expense.status == 'OPEN') return total + expense.value;
       else return 0;
     }, 0);
-    const totalExpenses = filteredExpenses.reduce(
+    const totalExpenses = expenses.reduce(
       (total, expense) => total + expense.value,
       0,
     );
